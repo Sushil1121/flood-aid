@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Flood Aid Request</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial; text-align: center; padding: 20px; }
+    label { display: block; margin-top: 10px; }
+    button { padding: 10px 20px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h2>Flood Relief Aid Request</h2>
+  <form id="aidForm">
+    <label><input type="checkbox" name="need" value="Food"> Food</label>
+    <label><input type="checkbox" name="need" value="Water"> Water</label>
+    <label><input type="checkbox" name="need" value="Blanket"> Blanket</label>
+    <label><input type="checkbox" name="need" value="Medicine"> Medicine</label>
+    <button type="submit">Submit</button>
+  </form>
+  <p id="status"></p>
+
+  <script>
+    document.getElementById("aidForm").onsubmit = function(e) {
+      e.preventDefault();
+      const selected = Array.from(document.querySelectorAll("input[name='need']:checked"))
+                           .map(el => el.value);
+      if (selected.length === 0) {
+        document.getElementById("status").innerText = "Please select at least one need.";
+        return;
+      }
+      fetch("https://your-api-or-database-endpoint.com", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ needs: selected, time: new Date().toISOString() })
+      }).then(() => {
+        document.getElementById("status").innerText = "Request submitted successfully!";
+      }).catch(() => {
+        document.getElementById("status").innerText = "Failed to send request.";
+      });
+    };
+  </script>
+</body>
+</html>
